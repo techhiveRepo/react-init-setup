@@ -21,52 +21,52 @@ const axiosInstance = axios.create({
     // base URL
     baseURL: API_URL,
     // other axios configurations
-  });
+});
 
-  axiosInstance.interceptors.response.use(
+axiosInstance.interceptors.response.use(
     (response) => response,
     async (error) => {
-      const originalRequest = error.config;
-    //    console.log(originalRequest);
-    //    console.log( window.__INITIAL_HEADERS__);
-  
-      // If the response is unauthorized and it's the first attempt to refresh the token
+        const originalRequest = error.config;
+        //    console.log(originalRequest);
+        //    console.log( window.__INITIAL_HEADERS__);
 
-      if(!error.config.url.includes("refreshToken")){
+        // If the response is unauthorized and it's the first attempt to refresh the token
 
-    
-      if (error.response.status === 401 ) {
-        // originalRequest._retry = true; // Prevent infinite retry loop
-  
-        try {
-          // Refresh the token
-          const refreshToken = getRefreshToken(); // Retrieve the refresh token from wherever it is stored
-          const response = await axiosInstance.post(`${API_URL}refreshToken`, { refreshToken });
-        //   console.log(response);
-          const newAccessToken = response.data.data.token;
-          localStorage.setItem("token",response.data.data.token);
-          localStorage.setItem("refreshToken",response.data.data.refreshToken);
-          // Update the token in your application's state or wherever it is stored
-        //   saveToken(newAccessToken); // Update the access token in your storage
-  
-          // Retry the original request with the new access token
-          originalRequest.headers['Authorization'] = newAccessToken ? `Bearer ${newAccessToken}` : '';
-          return axiosInstance(originalRequest);
-        } catch (refreshError) {
-          // Handle token refresh error (e.g., refresh token expired)
-          console.error(refreshError);
-          return logoutFromSystem();
-          // Redirect to login or perform other error handling
+        if (!error.config.url.includes("refreshToken")) {
 
+
+            if (error.response.status === 401) {
+                // originalRequest._retry = true; // Prevent infinite retry loop
+
+                try {
+                    // Refresh the token
+                    const refreshToken = getRefreshToken(); // Retrieve the refresh token from wherever it is stored
+                    const response = await axiosInstance.post(`${API_URL}refreshToken`, { refreshToken });
+                    //   console.log(response);
+                    const newAccessToken = response.data.data.token;
+                    localStorage.setItem("token", response.data.data.token);
+                    localStorage.setItem("refreshToken", response.data.data.refreshToken);
+                    // Update the token in your application's state or wherever it is stored
+                    //   saveToken(newAccessToken); // Update the access token in your storage
+
+                    // Retry the original request with the new access token
+                    originalRequest.headers['Authorization'] = newAccessToken ? `Bearer ${newAccessToken}` : '';
+                    return axiosInstance(originalRequest);
+                } catch (refreshError) {
+                    // Handle token refresh error (e.g., refresh token expired)
+                    console.error(refreshError);
+                    return logoutFromSystem();
+                    // Redirect to login or perform other error handling
+
+                }
+            }
+
+            // For all other error cases, pass the error along
+            return Promise.reject(error);
         }
-      }
-  
-      // For all other error cases, pass the error along
-      return Promise.reject(error);
-    }
 
-}
-  );
+    }
+);
 
 let count: any = 1;
 export const get = (
@@ -88,11 +88,11 @@ export const get = (
     const axiosObj: AxiosRequestConfig = {
         method: "get",
         url: apiUrl,
-        
+
     };
     if (excludeTokenAPIList.indexOf(url) < 0) {
         axiosObj.headers = {
-            Authorization: getToken() ?  `${"Bearer " + getToken()}`: "",
+            Authorization: getToken() ? `${"Bearer " + getToken()}` : "",
             // "Access-Control-Allow-Origin": "*",
         };
     }
@@ -157,7 +157,7 @@ export const put = (
         const formData = new FormData();
         // console.log("bodyObj", bodyObj);
         Object.keys(bodyObj).map((key) => {
-      formData.append(key, bodyObj[key]);
+            formData.append(key, bodyObj[key]);
         });
         bodyObj = formData;
     }
@@ -243,19 +243,19 @@ const handleError = (error: any): any => {
     }
     else if ((response && response !== undefined && response.status === 405)) {
         // console.log(response.data.Message)
-        te (response.data.message);
+        te(response.data.message);
     }
     else if (response && response != undefined && response.status === 500) {
-        te (response.data.message);
-    //   const obj = {
-    //     clientId: localStorage.getItem("clientId"),
-    //     username: localStorage.getItem("userId"),
-    //   };
-    //   if (count === 1) {
-    //     localStorage.removeItem("token");
-    //     logoutFromSystem(obj);
-    //     count = 0;
-    //   }
+        te(response.data.message);
+        //   const obj = {
+        //     clientId: localStorage.getItem("clientId"),
+        //     username: localStorage.getItem("userId"),
+        //   };
+        //   if (count === 1) {
+        //     localStorage.removeItem("token");
+        //     logoutFromSystem(obj);
+        //     count = 0;
+        //   }
     }
     else {
         te("Sorry, something went wrong. Please try again.");
@@ -272,7 +272,7 @@ export const downloadFileAPI = (url: string): Promise<any> => {
     if (excludeTokenAPIList.indexOf(url) < 0) {
         header = {
             token: getToken() ? getToken() : "",
-            Authorization: getToken() ?  `${"Bearer " + getToken()}`: "",
+            Authorization: getToken() ? `${"Bearer " + getToken()}` : "",
             "Access-Control-Allow-Origin": "*",
         };
     }
@@ -285,7 +285,7 @@ export const downloadFileAPI = (url: string): Promise<any> => {
             // console.log("RESPONSE " + response);
             if (response.status === 200) {
                 const fileNameHeader = 'content-disposition';
-                console.log(response.headers[fileNameHeader],"response ");
+                console.log(response.headers[fileNameHeader], "response ");
                 const suggestedFileName = response.headers[fileNameHeader].split('filename=')[1];
 
                 const effectiveFileName =
@@ -341,8 +341,20 @@ export const downloadFileAPI = (url: string): Promise<any> => {
         });
 };
 
-export const downloadFilePostAPI = (url: string,bodyObj = {} as any,): Promise<any> => {
+/**
+ * Download a file from a POST API endpoint using Axios.
+ *
+ * @param url - The API endpoint URL.
+ * @param bodyObj - The request body object.
+ * @param fileName - The suggested file name for the downloaded file.
+ * @returns A Promise that resolves when the file is downloaded.
+ */
+export const downloadFilePostAPI = (url: string, bodyObj = {} as any, fileName: any): Promise<any> => {
+    // Construct the full API URL
     const apiUrl = API_URL + url;
+    // Set the suggested file name for the downloaded file
+    const exportfileName = fileName;
+    // Define the headers for the request, including the Authorization token if required
     let header = {};
     if (excludeTokenAPIList.indexOf(url) < 0) {
         header = {
@@ -354,20 +366,21 @@ export const downloadFilePostAPI = (url: string,bodyObj = {} as any,): Promise<a
     return axios
         .post(apiUrl, bodyObj, { responseType: "arraybuffer", headers: header })
         .then((response: any) => {
-            // // Log somewhat to show that the browser actually exposes the custom HTTP header
-            // console.log('2@ res', JSON.parse(new TextDecoder().decode(response.data)))
-            //
+            // Handle the response
+
+            // Check if the response status is 200
             if (response.status === 200) {
+                // Extract the suggested file name from the response headers
                 const fileNameHeader = "x-suggested-filename";
                 const suggestedFileName = response.headers[fileNameHeader];
                 const fileNameHeader1 = 'Content-Disposition:';
-               
-               
-                // console.log(response.headers[fileNameHeader],"response ");
+
+
+                // Set the effective file name considering the suggested file name
                 // const suggestedFileName = response.headers[fileNameHeader].split('filename=')[1];
                 const effectiveFileName =
                     suggestedFileName === undefined
-                        ? "sampleFile.csv"
+                        ? exportfileName + ".csv"
                         : suggestedFileName;
                 console.log(
                     `Received header[${fileNameHeader}]: ${suggestedFileName}, effective fileName: ${effectiveFileName} `
@@ -378,14 +391,14 @@ export const downloadFilePostAPI = (url: string,bodyObj = {} as any,): Promise<a
 
                 // const outputFilename = effectiveFileName;
 
-                // If you want to download file automatically using link attribute.
+                // Create a download link and trigger a click to download the file
                 const url = URL.createObjectURL(new Blob([response.data]));
                 const link = document.createElement("a");
                 link.href = url;
                 link.setAttribute("download", effectiveFileName);
                 document.body.appendChild(link);
                 link.click();
-
+                // Prepare a custom response object
                 const customResponse: ResponseWrapperDTO = {
                     status: "200",
                     message: "File Downloaded Successfully.",
@@ -395,25 +408,29 @@ export const downloadFilePostAPI = (url: string,bodyObj = {} as any,): Promise<a
                     },
                     path: url,
                 };
+                // Return the custom response
                 return handleResponse(customResponse);
             } else {
+                // Handle the case where the response status is not 200
                 console.log(
                     "2@ res",
                     JSON.parse(new TextDecoder().decode(response.data))
                 );
                 const obj = JSON.parse(new TextDecoder().decode(response.data));
-               
+                // Return the response object
                 return handleResponse(obj);
             }
         })
         .catch((error: any) => {
-           
+            // Handle errors
 
+            // Extract the response from the error object
             const { response } = error;
             // console.log('2@ res', JSON.parse(new TextDecoder().decode(response.data)))
+            // Parse the response data
             const obj = JSON.parse(new TextDecoder().decode(response.data));
-           
 
+            // Return the response object
             return handleResponse(obj);
         });
 };
