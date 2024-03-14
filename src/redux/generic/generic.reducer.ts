@@ -12,43 +12,51 @@ import {
   GET_CITY_SUCCESS,
   GET_CITY_FAILURE,
 } from "./generic.type";
-
+/**
+ * Represents the initial state of the Generic reducer.
+ */
 export interface GenericInitialState {
-
-  stateData: any;
-  cityData: any;
-  countryData: any;
-  notificationData: any;
+  /** Data for dropdowns. */
   dropDownData: any;
+  /** Data for notifications. */
+  notificationData: any;
+  /** Data for states. */
+  stateData: any;
+  /** Data for cities. */
+  cityData: any;
+  /** Data for countries. */
+  countryData: any;
+  /** Flag indicating websocket connection status. */
   webSocketFlag: boolean;
+  /** Flag indicating default Redux action status. */
   defaultRedux: boolean;
-
-  
-
+  /** Flag indicating loading status. */
   loading: boolean;
-
 }
 
+/** Initial state for the Generic reducer. */
 const initialState: GenericInitialState = {
   dropDownData: null,
   notificationData: null,
-  stateData: null, 
+  stateData: null,
   cityData: null,
   countryData: null,
   webSocketFlag: false,
   defaultRedux: true,
   loading: false,
-  
-
 };
 
+/**
+ * Reducer function for the Generic state.
+ * @param state Current state of the Generic reducer.
+ * @param action Action dispatched to the reducer.
+ * @returns New state after processing the action.
+ */
 const genericReducer = (
   state: GenericInitialState = initialState,
   action: RooteAction
 ): GenericInitialState => {
   switch (action.type) {
-
-   
     case GET_DATA_FOR_DROPDOWN_SUCCESS:
       return {
         ...state,
@@ -62,7 +70,7 @@ const genericReducer = (
         dropDownData: null,
         loading: false,
       };
- 
+
     case GET_ALL_NOTIFICATION_SUCCESS:
       return {
         ...state,
@@ -91,7 +99,6 @@ const genericReducer = (
         loading: false,
       };
 
-
     case GET_COUNTRY_SUCCESS:
       return {
         ...state,
@@ -105,6 +112,7 @@ const genericReducer = (
         countryData: null,
         loading: false,
       };
+
     case GET_STATES_SUCCESS:
       return {
         ...state,
@@ -113,12 +121,12 @@ const genericReducer = (
       };
 
     case GET_STATES_FAILURE:
-
       return {
         ...state,
         stateData: null,
         loading: false,
       };
+
     case GET_CITY_SUCCESS:
       return {
         ...state,
@@ -133,7 +141,6 @@ const genericReducer = (
         loading: false,
       };
 
-   
     case RESET_GENERIC_DATA:
       return {
         ...state,
@@ -148,13 +155,14 @@ const genericReducer = (
         ...state,
         defaultRedux: true,
         loading: false,
-      }
+      };
+
     case DEFAULT_REDUX_FAILURE:
       return {
         ...state,
         defaultRedux: false,
         loading: false,
-      }
+      };
 
     default:
       return state;

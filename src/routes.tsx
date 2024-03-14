@@ -13,7 +13,7 @@ import NotFound from './components/NotFound/NotFound';
 import UserMangement from './pages/admin/UserMangement/UserMangement';
 import { jwtDecode } from "jwt-decode";
 
-
+/** Define private  routes */
 const privateRoutes: RouterProps[] = [
   {
     path: ENUMFORROUTES.DASHBOARD,
@@ -30,6 +30,7 @@ const privateRoutes: RouterProps[] = [
   
 
 ];
+/** Define public Routes */
 const publicRoutes: RouterProps[] = [
   {
     path: "/",
@@ -50,10 +51,15 @@ const publicRoutes: RouterProps[] = [
 
 ];
 
-
+/**
+ * AppRouter Component
+ * @param {object} props - Props passed to the component
+ * @returns {JSX.Element} JSX element representing the AppRouter component
+ */
 const AppRouter = (props): JSX.Element => {
-
+/** Check if the user is authenticated  */
   const isAuthenticated = getToken() !== null ? true : false;
+  /** State to manage private route list */
   const [privateRouteList, setPrivateRouteList] = useState<RouterProps[]>([]);
 //roles and Righs Start
   // useEffect(() => {

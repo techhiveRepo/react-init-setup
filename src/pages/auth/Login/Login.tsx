@@ -2,7 +2,11 @@ import React from 'react'
 import { RootState } from '../../../redux/store';
 import { connect } from 'react-redux';
 import { loading } from '../../../redux/Loader/loader.action';
-
+/**
+ * Login Component
+ * @param {object} props - Props passed to the component
+ * @returns {JSX.Element} JSX element representing the Login component
+ */
 const Login = (props) => {
     return (
         <>
