@@ -36,6 +36,48 @@ export const SUPPORTED_FORMATS = [
 ];
 
 
+
+/** key Genrated Base64   */
+const key = "c2tpbGxhYm91dHNwZWxsYg==";
+const parseKey = CryptoJS.enc.Base64.parse(key);
+
+/**
+ * Encrypts the given object using AES encryption.
+ * @param obj The object to encrypt.
+ * @returns The encrypted string.
+ */
+export const encrypted: any = (obj) => {
+  return CryptoJS.AES.encrypt(typeof obj === "string" ? obj : JSON.stringify(obj), parseKey, {
+    mode: CryptoJS.mode.ECB,
+    padding: CryptoJS.pad.Pkcs7
+  }).toString()
+
+
+}
+/**
+ * Decrypts the given string using AES decryption.
+ * @param obj The string to decrypt.
+ * @returns The decrypted object or string.
+ */
+export const decrypted = (obj) => {
+  if (isNullUndefinedOrBlank(obj)) {
+    return;
+  }
+  var bytes = CryptoJS.AES?.decrypt(obj, parseKey, {
+    mode: CryptoJS.mode.ECB,
+    padding: CryptoJS.pad.Pkcs7
+  });
+  var originalText = bytes.toString(CryptoJS.enc.Utf8);
+  console.log(obj, "in Function", originalText, "text", bytes.toString(CryptoJS.enc.Utf8));
+  if (isNullUndefinedOrBlank(originalText)) {
+    return;
+  }
+  // return originalText;
+  return typeof originalText === "string" ? originalText : JSON?.parse(originalText);
+
+}
+
+
 // get token of loggedIn user
 /** Function to get the token of the logged-in user from local storage. */
 export const getToken = (): returnTypeForString => {
