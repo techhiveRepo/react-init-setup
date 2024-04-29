@@ -514,7 +514,7 @@ If valid, format the date according to the specified format.
 If not valid, return "Invalid Date".
  */
   // console.log(moment(date).isValid()?"hello":"no hello");
-  return moment(date).isValid() ? moment(date).format(format) : "Invalid Date";
+  return moment(date).isValid() ? moment(new Date(date)).format(format) : "Invalid Date";
 }
 
 /**
@@ -696,7 +696,7 @@ export const customJsonInclude = (obj): void => {
       if (obj[key] && obj[key].length > 0) {
         obj[key] = removeEmptyElementsFromArray(obj[key]);
       }
-      if (isEmptyObject(obj[key])) {
+      if (isEmptyObject(obj[key]) || isNullUndefinedOrBlank(obj[key])) {
         delete obj[key];
       } else {
         customJsonInclude(obj[key]);
