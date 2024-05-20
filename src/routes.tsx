@@ -5,13 +5,14 @@ import Login from './pages/auth/Login/Login';
 import Dashboard from './pages/admin/Dashboard/Dashboard';
 import { RouterProps } from './interfaces';
 import { ENUMFORROUTES } from './interfaces/interface';
-import { Navbar } from 'react-bootstrap';
+
 import Sidebar from './components/Sidebar/Sidebar';
 import GuestRoute from './common/GuestRoute';
 import AuthRoute from './common/AuthRoute';
 import NotFound from './components/NotFound/NotFound';
 import UserMangement from './pages/admin/UserMangement/UserMangement';
 import { jwtDecode } from "jwt-decode";
+import Navbar from './components/Navbar/Navbar';
 
 /** Define private  routes */
 const privateRoutes: RouterProps[] = [
